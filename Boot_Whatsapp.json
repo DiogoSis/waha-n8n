@@ -1,0 +1,316 @@
+{
+  "name": "Boot Whatsapp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bb7f2033-f8f7-4e7f-bae1-daa4a144ead6",
+      "name": "Webhook",
+      "webhookId": "311dcc2a-2ab6-44ca-8126-d03ec64e1180"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.event }}",
+                    "rightValue": "message",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8f81011b-a730-455b-8b1d-f9599de05ff7"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        520,
+        0
+      ],
+      "id": "aabd963c-7467-4efd-8e19-53d4c6d81e69",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "Você é Dr. Seguinho um assistente médico virtual especializado em oferecer orientações preliminares sobre sintomas comuns. Seu papel é ajudar usuários a entender possíveis causas para seus sintomas, baseando-se em informações de saúde pública e medicina baseada em evidências, sempre reforçando a necessidade de consultar um profissional de saúde presencialmente para diagnóstico e tratamento.\n\nDiretrizes:\n\nApresentação: Comece se identificando como um assistente virtual, não um médico real.\n\nColeta de informações: Peça ao usuário para descrever os sintomas de forma detalhada (ex.: tipo, duração, intensidade, localização, fatores que aliviam/pioram).\n\nContexto: Pergunte se o usuário já tem diagnóstico prévio de doenças ou está usando medicamentos.\n\nLimites:\n\nSe os sintomas envolverem situações graves (dor no peito, dificuldade respiratória, sangramentos intensos, etc.), indique imediatamente para buscar atendimento de emergência.\n\nNão prescreva medicamentos, tratamentos ou diagnósticos definitivos.\n\nSugestões educativas:\n\nListe possíveis condições comuns relacionadas aos sintomas (ex.: \"Dor de garganta com febre pode ser associada a infecções virais, como resfriados\").\n\nOfereça dutas de cuidado geral (ex.: hidratação, repouso).\n\nEncaminhamento: Recomende a busca por um médico específico (ex.: clínico geral, cardiologista) conforme os sintomas.\n\nExemplo de resposta:\n*'Com base nos sintomas descritos (dor de cabeça latejante e náuseas após exposição ao sol), uma possibilidade é desidratação ou insolação. Recomendo que você:\n\nBeba água imediatamente.\n\nDescanse em um local fresco.\n\nProcure um clínico geral ou serviço de urgência se surgirem tonturas ou vômitos persistentes.'*\n\nNota: Use linguagem clara, evite termos técnicos excessivos e adapte-se ao nível de compreensão do usuário. Se não houver informações suficientes, peça mais detalhes antes de dar qualquer orientação."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        740,
+        0
+      ],
+      "id": "84a87144-f5e7-4444-abf8-612192ec3929",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        700,
+        180
+      ],
+      "id": "9f4223fe-42d6-4139-b9e6-93ce4311cada",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Qc7nYDWLFyziiy2N",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f252dd59-c927-4687-b7b0-7ef68f8f187a",
+              "name": "session",
+              "value": "={{ $json.body.session }}",
+              "type": "string"
+            },
+            {
+              "id": "343a9c3a-7972-4a25-9eec-5806c523fc04",
+              "name": "chatId",
+              "value": "={{ $json.body.payload.from }}",
+              "type": "string"
+            },
+            {
+              "id": "3d6f8e28-409e-4604-943e-b7a280afabe5",
+              "name": "pushName",
+              "value": "={{ $json.body.payload._data.Info.PushName }}",
+              "type": "string"
+            },
+            {
+              "id": "a51a2857-ab8d-4144-9066-7ed765677f1f",
+              "name": "payload_id",
+              "value": "={{ $json.body.payload.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e0cf16e2-10f9-4ec2-ac42-ade99fae5000",
+              "name": "event",
+              "value": "={{ $json.body.event }}",
+              "type": "string"
+            },
+            {
+              "id": "0111732a-3884-4443-b4db-99a9eaa2d88e",
+              "name": "message",
+              "value": "={{ $json.body.payload.body }}",
+              "type": "string"
+            },
+            {
+              "id": "540cadaf-17c8-4688-b55c-b23bfabc515a",
+              "name": "fromMe",
+              "value": "={{ $json.body.payload.fromMe }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ],
+      "id": "fe84cbf0-9f6c-4117-9926-b1e9c59c8d71",
+      "name": "Dados"
+    },
+    {
+      "parameters": {
+        "resource": "Chatting",
+        "operation": "Send Seen",
+        "session": "={{ $('Dados').item.json.session }}",
+        "chatId": "={{ $('Dados').item.json.chatId }}",
+        "messageId": "={{ $('Dados').item.json.payload_id }}",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-waha.WAHA",
+      "typeVersion": 202411,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "0fb35b53-1dde-422d-b0d2-155049189686",
+      "name": "WAHA",
+      "credentials": {
+        "wahaApi": {
+          "id": "AeDzLcnjy9BCnQzH",
+          "name": "WAHA account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Dados').item.json.chatId }}",
+        "sessionTTL": 3600,
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.5,
+      "position": [
+        840,
+        220
+      ],
+      "id": "47e3f8e5-7f75-4f66-bf82-96f9dfe1be12",
+      "name": "Redis Chat Memory",
+      "credentials": {
+        "redis": {
+          "id": "ajyDXauNChI1GQLs",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "Chatting",
+        "operation": "Send Text",
+        "session": "={{ $('Dados').item.json.session }}",
+        "chatId": "={{ $('Dados').item.json.chatId }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-waha.WAHA",
+      "typeVersion": 202411,
+      "position": [
+        1320,
+        0
+      ],
+      "id": "e27d1730-3c0d-45f8-b796-0637c7bae918",
+      "name": "WAHA1",
+      "credentials": {
+        "wahaApi": {
+          "id": "AeDzLcnjy9BCnQzH",
+          "name": "WAHA account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dados": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "WAHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WAHA": {
+      "main": [
+        [
+          {
+            "node": "WAHA1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9b81766d-814a-4e52-949d-f556f5b3d927",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8d56c0469662fb3db09b932120b27603947c49f1568bdab048ba9803cb311b5a"
+  },
+  "id": "XcD2Af30bjD4jkPo",
+  "tags": []
+}
